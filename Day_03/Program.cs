@@ -111,7 +111,44 @@ namespace Day_03
             Console.WriteLine("Advent_of_Code_2023 | Day_03 | 2");
             sum = 0;
 
+            foreach (var sCord in symbols)
+            {
+                List<PseudoNum> adjParts = new List<PseudoNum>();
+                if (input[sCord.Item1].ToCharArray()[sCord.Item2] == '*')
+                {
+                    for (int i = sCord.Item1 - 1; i <= sCord.Item1 + 1; i++)
+                    {
+                        for (int j = sCord.Item2 - 1; j <= sCord.Item2 + 1; j++)
+                        {
+                            if (partNumbers.ContainsKey(i))
+                            {
+                                if (partNumbers[i].ContainsKey(j))
+                                {
+                                    if (!adjParts.Contains(partNumbers[i][j]))
+                                    {
+                                        adjParts.Add(partNumbers[i][j]);
+                                    }
+                                }
+                            }
 
+                            if(adjParts.Count > 2)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (adjParts.Count > 2)
+                        {
+                            break;
+                        }
+                    }
+
+                    if(adjParts.Count == 2)
+                    {
+                        sum += (adjParts.First().value* adjParts.Last().value);
+                    }
+                }
+            }
 
             Console.WriteLine($"Sum: {sum}");
 
