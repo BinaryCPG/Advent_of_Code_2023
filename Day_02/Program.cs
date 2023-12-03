@@ -11,10 +11,10 @@ namespace Day_02
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Advent_of_Code_2023 | Day_02 | 1");
             string[] input = File.ReadAllLines("input.txt");
             Dictionary<string, int> limits = new Dictionary<string, int>() { { "red", 12 }, {"green", 13 }, {"blue", 14 } };
 
+            Console.WriteLine("Advent_of_Code_2023 | Day_02 | 1");
             int sum = 0;
             for (int i = 0; i< input.Length; i++)
             {
@@ -67,6 +67,46 @@ namespace Day_02
             Console.WriteLine($"Sum: {sum}");
 
             Console.WriteLine("Advent_of_Code_2023 | Day_02 | 2");
+            sum = 0;
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                string[] lineParts = input[i].Split(new char[] { ':' });
+                int currentIndex = int.Parse(lineParts[0].Replace("Game", "").Trim());
+                string[] gameContent = lineParts[1].Split(new char[] { ',', ';' });
+                Dictionary<string, int> minColorCount = new Dictionary<string, int>();
+
+                for (int gp = 0; gp < gameContent.Length; gp++)
+                {
+                    string[] cleanPart = gameContent[gp].Trim().Split(new char[] { ' ' });
+                    string color = cleanPart[1].Trim();
+                    int count = int.Parse(cleanPart[0].Trim());
+
+                    if (minColorCount.Keys.Contains(color))
+                    {
+                        if (minColorCount[color] < count)
+                        {
+                            minColorCount[color] = count;
+                        }
+                    }
+                    else
+                    {
+                        minColorCount.Add(color, count);
+                    }
+                }
+
+                int power = 1;
+                foreach(string c in limits.Keys)
+                {
+                    if (minColorCount.Keys.Contains(c))
+                    {
+                        power *= minColorCount[c];
+                    }
+                }
+                sum += power;
+            }
+
+            Console.WriteLine($"Sum: {sum}");
 
             Console.ReadLine();
         }
