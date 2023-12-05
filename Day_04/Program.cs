@@ -65,9 +65,7 @@ namespace Day_04
 
             Console.WriteLine("Advent_of_Code_2023 | Day_04 | 2");
             sum = 0;
-#if DEBUG
-            Dictionary<int, int> _numScratchcards = new Dictionary<int, int>();
-#endif
+
             Queue<int> cardsToProcess = new Queue<int>();
             for(int i = 0; i < input.Length; i++) { cardsToProcess.Enqueue(i); }
 
@@ -76,13 +74,7 @@ namespace Day_04
                 if (numWonNumbers.ContainsKey(cardIndex))
                 {
                     sum++;
-#if DEBUG
-                    if (!_numScratchcards.ContainsKey(cardIndex))
-                    {
-                        _numScratchcards.Add(cardIndex, 0);
-                    }
-                    _numScratchcards[cardIndex]++;
-#endif
+
                     for (int i = cardIndex + 1; i < numWonNumbers[cardIndex] + cardIndex + 1; i++)
                     {
                         cardsToProcess.Enqueue(i);
