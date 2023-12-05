@@ -21,15 +21,6 @@ namespace Day_05
             foreach (string n in input[0].Split(new char[] {':'})[1].Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries)) { seeds_tmp.Add(Int64.Parse(n)); }
             Int64[] seeds = seeds_tmp.ToArray();
 
-#if DEBUG
-            Dictionary<Int64, Dictionary<Int64, Int64>> seedHistory = new Dictionary<Int64, Dictionary<Int64, Int64>>();
-            for(Int64 k = 0; k < seeds.Length; k++) 
-            {
-                seedHistory.Add(k, new Dictionary<Int64, Int64>());
-                seedHistory[k].Add(0, seeds[k]);
-            }
-#endif
-
             Int64[] seeds_new = null;
             for(Int64 i = 1; i < input.Length; i++)
             {
@@ -68,9 +59,7 @@ namespace Day_05
                         {
                             seeds[j] = seeds_new[j];
                         }
-#if DEBUG
-                        for (Int64 k = 0; k < seeds.Length; k++) { seedHistory[k].Add(i, seeds[k]); }
-#endif
+
                         seeds_new = null;
                     }
                 }
@@ -82,9 +71,7 @@ namespace Day_05
                 {
                     seeds[j] = seeds_new[j];
                 }
-#if DEBUG
-                for (Int64 k = 0; k < seeds.Length; k++) { seedHistory[k].Add(input.Length, seeds[k]); }
-#endif
+
                 seeds_new = null;
             }
 
