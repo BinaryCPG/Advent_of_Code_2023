@@ -1,4 +1,10 @@
 #ignore all files
-*
+*.*
+
 #except cs files
 !*.cs
+
+#ignore special folders
+*/bin
+*/obj
+*/Properties
