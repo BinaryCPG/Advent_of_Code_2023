@@ -26,7 +26,6 @@ namespace Day_05
             {
                 if (input[i].Length > 0)
                 {
-
                     if (48 <= input[i][0] && input[i][0] <= 57)
                     {
                         if(seeds_new == null)
@@ -48,7 +47,6 @@ namespace Day_05
                                 seeds_new[j] = (seeds[j] - srcOffset) + destOffset;
                             }
                         }
-
                     }
                 }
                 else
@@ -89,6 +87,7 @@ namespace Day_05
             Console.WriteLine("Advent_of_Code_2023 | Day_05 | 2");
             sum = 0;
 
+            /*
             List<Tuple<Int64, Int64>> seedRanges = new List<Tuple<long, long>>();
             {
                 string[] seedLine = input[0].Split(new char[] { ':' })[1].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -98,13 +97,13 @@ namespace Day_05
                 }
             }
             seedRanges.Sort((a, b) => a.Item1.CompareTo(b.Item1));
-            /*
+            /
             A-to-B map:
                 [offset value]
                     [
                         [lower range],[length]
                     ]
-             */
+             /
             List<Dictionary<Int64, List<Tuple<Int64, Int64>>>> offsetMatrix = new List<Dictionary<long, List<Tuple<long, long>>>>();
             Dictionary<Int64, List<Tuple<Int64, Int64>>> newOffsetBlock = null;
             for (Int64 i = 1; i < input.Length; i++)
@@ -156,11 +155,44 @@ namespace Day_05
                 offsetsSorted.Add(offsets);
             }
 
-            while (sum == 0)
+            sum = seedRanges.First().Item1;
+            foreach(var sr in seedRanges)
             {
+                var start = DateTime.Now;
+                Console.WriteLine($"Starting range ({sr.Item1}|{sr.Item1 + sr.Item2-1})");
+                for(Int64 i = sr.Item1; i < sr.Item1 + sr.Item2; i++)
+                {
+                    Int64 calcVal = i;
+                    for (Int64 j = 0; j < offsetMatrix.Count; j++)
+                    {
+                        Int64 offset = 0;
+                        foreach (var offsetBlockOffset in offsetMatrix[(int)j])
+                        {
+                            foreach(var offsetRange in offsetBlockOffset.Value)
+                            {
+                                if(offsetRange.Item1 <= calcVal && calcVal < offsetRange.Item1 + offsetRange.Item2)
+                                {
+                                    offset = offsetBlockOffset.Key;
+                                    break;
+                                }
+                            }
 
+                            if (offset != 0)
+                            {
+                                break;
+                            }
+                        }
+                        calcVal += offset;
+                    }
+                    if(calcVal < sum)
+                    {
+                        sum = calcVal;
+                        Console.WriteLine($"Newest lowest vaslue:{sum}");
+                    }
+                }
+                Console.WriteLine($"Finished range ({sr.Item1}|{sr.Item1 + sr.Item2 - 1}) [{DateTime.Now-start}]");
             }
-
+            */
             Console.WriteLine($"Sum: {sum}");
 
             Console.ReadLine();
