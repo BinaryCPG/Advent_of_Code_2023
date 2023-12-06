@@ -32,6 +32,13 @@ namespace Day_06
 
             Console.WriteLine("Advent_of_Code_2023 | Day_06 | 2");
             sum = 0;
+            {
+                Int64 t_max = Int64.Parse(input[0].Substring(10).Replace(" ", ""));
+                Int64 d_lim = Int64.Parse(input[1].Substring(10).Replace(" ", ""));
+                double fA = t_max / 2.0;
+                double fB = Math.Sqrt((Math.Pow(t_max, 2) / 4.0) - (double)d_lim);
+                sum = (((int)Math.Ceiling(fA + fB) - 1) - ((int)Math.Floor(fA - fB) + 1) + 1);
+            }
 
             Console.WriteLine($"Sum: {sum}");
 
