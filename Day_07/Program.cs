@@ -26,7 +26,7 @@ namespace Day_07
             HandType type;
             char[] hand = new char[5];
 
-            public CardHand(string shand)
+            public CardHand(string shand, bool jokerRule = false)
             {
                 if (shand.Length != 5)
                     throw new ArgumentException();
@@ -43,47 +43,67 @@ namespace Day_07
                 }
 
                 type = HandType.ERR;
-                switch (handCountByValue.Keys.Count)
+
+                if(jokerRule && handCountByValue.Keys.Contains(cards.IndexOf('J')))
                 {
-                    case 1:
-                        type = HandType.FIVE_KIND;
-                        break;
-                    case 2:
-                        if (handCountByValue.Values.First() == 4 || handCountByValue.Values.First() == 1)
+                    Dictionary<char, CardHand> tmpHands = new Dictionary<char, CardHand>();
+                    foreach (char otherCard in shand)
+                    {
+                        if (!tmpHands.ContainsKey(otherCard))
                         {
-                            type = HandType.FOUR_KIND;
+                            tmpHands.Add(otherCard, new CardHand(shand.Replace('J', otherCard)));
                         }
-                        //else if (handCountByValue.Values.First() == 3 && handCountByValue.Values.Last() == 2)
-                        else
-                        {
-                            type = HandType.FULL_HOUSE;
-                        }
-                        break;
-                    case 3:
-                        if(handCountByValue.Values.First() == 3 || handCountByValue.Values.Last()==3 || (handCountByValue.Values.First()==1 && handCountByValue.Values.Last() == 1))
-                        {
-                            type = HandType.THREE_KIND;
-                        }
-                        else
-                        /*else if (
-                            (handCountByValue.Values.First()==1 && handCountByValue.Values.Last()==2) ||
-                            (handCountByValue.Values.First() == 2 && handCountByValue.Values.Last() == 1) ||
-                            (handCountByValue.Values.First() == 2 && handCountByValue.Values.Last() == 2)
-                            )*/
-                        {
-                            type = HandType.TWO_PAIR;
-                        }
-                        break;
-                    case 4:
-                        type = HandType.ONE_PAIR;
-                        break;
-                    case 5:
-                        type = HandType.HIGH_CARD;
-                        break;
-                    default:
-                        type = HandType.HIGH_CARD;
-                        break;
+                    }
+                    List<CardHand> tmpCardRank = new List<CardHand>(tmpHands.Values);
+                    tmpCardRank.Sort();
+                    type = tmpCardRank.Last().type;                    
                 }
+                else
+                {
+                    switch (handCountByValue.Keys.Count)
+                    {
+                        case 1:
+                            type = HandType.FIVE_KIND;
+                            break;
+                        case 2:
+                            if (handCountByValue.Values.First() == 4 || handCountByValue.Values.First() == 1)
+                            {
+                                type = HandType.FOUR_KIND;
+                            }
+                            //else if (handCountByValue.Values.First() == 3 && handCountByValue.Values.Last() == 2)
+                            else
+                            {
+                                type = HandType.FULL_HOUSE;
+                            }
+                            break;
+                        case 3:
+                            if(handCountByValue.Values.First() == 3 || handCountByValue.Values.Last()==3 || (handCountByValue.Values.First()==1 && handCountByValue.Values.Last() == 1))
+                            {
+                                type = HandType.THREE_KIND;
+                            }
+                            else
+                            /*else if (
+                                (handCountByValue.Values.First()==1 && handCountByValue.Values.Last()==2) ||
+                                (handCountByValue.Values.First() == 2 && handCountByValue.Values.Last() == 1) ||
+                                (handCountByValue.Values.First() == 2 && handCountByValue.Values.Last() == 2)
+                                )*/
+                            {
+                                type = HandType.TWO_PAIR;
+                            }
+                            break;
+                        case 4:
+                            type = HandType.ONE_PAIR;
+                            break;
+                        case 5:
+                            type = HandType.HIGH_CARD;
+                            break;
+                        default:
+                            type = HandType.HIGH_CARD;
+                            break;
+                    }
+                }
+
+
                 if (type == HandType.ERR)
                     throw new Exception("Unknown hand type!");
             }
@@ -136,6 +156,23 @@ namespace Day_07
 
             Console.WriteLine("Advent_of_Code_2023 | Day_07 | 2");
             sum = 0;
+
+            cards = new List<char>(new char[] { 'A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J' });
+            cards.Reverse();
+
+            handToBids = new Dictionary<CardHand, int>();
+            foreach (string line in input)
+            {
+                string[] lineComps = line.Split(new char[] { ' ' });
+                handToBids.Add(new CardHand(lineComps[0], true), int.Parse(lineComps[1]));
+            }
+            handsSorted = new List<CardHand>(handToBids.Keys);
+            handsSorted.Sort();
+
+            for (int i = 0; i < handsSorted.Count; i++)
+            {
+                sum += (i + 1) * handToBids[handsSorted[i]];
+            }
 
             Console.WriteLine($"Sum: {sum}");
 
